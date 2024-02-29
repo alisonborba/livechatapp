@@ -35,7 +35,7 @@ export async function postData(message: string, userEmail: string) {
     useTLS: true,
   });
 
-  pusher.trigger(channelName, eventName, {
+  await pusher.trigger(channelName, eventName, {
     message: `${JSON.stringify(data)}\n\n`,
   });
 }
