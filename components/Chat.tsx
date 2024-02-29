@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
+import { channelName, eventName } from "@/components/constants";
 
 interface iAppProps {
   data: {
@@ -23,15 +24,15 @@ export default function ChatComponent({ data }: iAppProps) {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
 
-    const channel = pusher.subscribe("clchat-channel");
-    channel.bind("clchat-event", function (data: any) {
-      const parsedComments = JSON.parse(data.message);
+    const channel = pusher.subscribe(channelName);
 
+    channel.bind(eventName, function (data: any) {
+      const parsedComments = JSON.parse(data.message);
       setTotalComments((prev) => [...prev, parsedComments]);
     });
 
     return () => {
-      pusher.unsubscribe("clchat-channel");
+      pusher.unsubscribe(channelName);
     };
   }, []);
 
@@ -42,13 +43,13 @@ export default function ChatComponent({ data }: iAppProps) {
   useEffect(() => scrollToBottom(), [totalComments]);
 
   return (
-    <div className="p-6 flex-grow max-h-screen overflow-y-auto py-32">
+    <div className="p-6 flex-grow pb-32">
       <div className="flex flex-col gap-4">
-        {totalComments.map((message, index) => (
+        {totalComments?.map((message, index) => (
           <div key={index}>
             <div className="flex items-center">
               <Image
-                src={message.User.image as string}
+                src={message.User?.image as string}
                 alt="Profile user image"
                 width={50}
                 height={50}
@@ -61,7 +62,7 @@ export default function ChatComponent({ data }: iAppProps) {
             </div>
 
             <p className="font-light text-sm text-gray-600">
-              {message.User.name}
+              {message.User?.name}
             </p>
           </div>
         ))}

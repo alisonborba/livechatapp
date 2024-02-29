@@ -1,6 +1,8 @@
 "use client";
 
 import { signIn, signOut } from "next-auth/react";
+import { useState } from "react";
+import { SigninCredentials } from "../auth/signin/page";
 
 export function Logout() {
   return (
@@ -25,12 +27,19 @@ export function NavLogin() {
 }
 
 export function MainLogin() {
+  console.log(
+    "process.env.NEXT_PUBLIC_FIREBASE_API_KEY",
+    process.env.NEXT_PUBLIC_FIREBASE_API_KEY
+  );
   return (
-    <button
-      onClick={() => signIn("google")}
-      className="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-500 px-8 py-3 text-center text-sm font-semibold text-white ring-blue-300 transition duration-100 hover:bg-blue-600 md:text-base"
-    >
-      Login with Google
-    </button>
+    <>
+      <button
+        onClick={() => signIn("google")}
+        className="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-500 px-8 py-3 text-center text-sm font-semibold text-white ring-blue-300 transition duration-100 hover:bg-blue-600 md:text-base"
+      >
+        Login with Google
+      </button>
+      <SigninCredentials />
+    </>
   );
 }

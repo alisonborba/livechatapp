@@ -1,20 +1,21 @@
 "use server";
 
 import { getServerSession } from "next-auth";
-import { prisma } from "./lib/db";
-import { authOptions } from "./lib/auth";
+import { prisma } from "@/lib/db";
+import { authConfig } from "@/lib/auth";
 
-export async function postData(formData: FormData) {
+import { channelName, eventName } from "@/components/constants";
+
+export async function postData(message: string, userEmail: string) {
   "use server";
   const Pusher = require("pusher");
 
-  const session = await getServerSession(authOptions);
-  const message = formData.get("message") as string;
+  console.log("userEmail", userEmail);
 
-  const data = await prisma.message.create({
+  const data = await prisma?.message?.create({
     data: {
       message,
-      email: session?.user?.email,
+      email: userEmail,
     },
     include: {
       User: {
@@ -34,7 +35,7 @@ export async function postData(formData: FormData) {
     useTLS: true,
   });
 
-  pusher.trigger("clchat-channel", "clchat-event", {
+  pusher.trigger(channelName, eventName, {
     message: `${JSON.stringify(data)}\n\n`,
   });
 }

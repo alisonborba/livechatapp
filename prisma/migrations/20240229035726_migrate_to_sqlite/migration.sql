@@ -1,3 +1,21 @@
+/*
+  Warnings:
+
+  - You are about to drop the `Comment` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `Tweet` table. If the table is not empty, all the data it contains will be lost.
+  - The primary key for the `User` table will be changed. If it partially fails, the table could be left without primary key constraint.
+
+*/
+-- DropTable
+PRAGMA foreign_keys=off;
+DROP TABLE "Comment";
+PRAGMA foreign_keys=on;
+
+-- DropTable
+PRAGMA foreign_keys=off;
+DROP TABLE "Tweet";
+PRAGMA foreign_keys=on;
+
 -- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL PRIMARY KEY,
@@ -25,15 +43,6 @@ CREATE TABLE "Session" (
 );
 
 -- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT,
-    "email" TEXT,
-    "emailVerified" DATETIME,
-    "image" TEXT
-);
-
--- CreateTable
 CREATE TABLE "VerificationToken" (
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL,
@@ -49,14 +58,29 @@ CREATE TABLE "Message" (
     CONSTRAINT "Message_email_fkey" FOREIGN KEY ("email") REFERENCES "User" ("email") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
+-- RedefineTables
+PRAGMA foreign_keys=OFF;
+CREATE TABLE "new_User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT,
+    "email" TEXT,
+    "emailVerified" DATETIME,
+    "image" TEXT,
+    "password" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO "new_User" ("createdAt", "email", "id", "name", "password") SELECT "createdAt", "email", "id", "name", "password" FROM "User";
+DROP TABLE "User";
+ALTER TABLE "new_User" RENAME TO "User";
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+PRAGMA foreign_key_check;
+PRAGMA foreign_keys=ON;
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");

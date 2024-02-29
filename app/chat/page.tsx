@@ -1,12 +1,12 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../lib/auth";
+import { authConfig } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import Form from "../components/Form";
-import { prisma } from "../lib/db";
-import ChatComponent from "../components/Chat";
+import Form from "@/components/Form";
+import { prisma } from "@/lib/db";
+import ChatComponent from "@/components/Chat";
 
 async function getData() {
-  const data = await prisma.message.findMany({
+  const data = await prisma?.message?.findMany({
     select: {
       id: true,
       message: true,
@@ -30,13 +30,13 @@ async function getData() {
 export const dynamic = "force-dynamic";
 
 export default async function ChatHomepage() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authConfig);
   const data = await getData();
 
   if (!session) redirect("/");
 
   return (
-    <div className="h-screen bg-gray-200 flex flex-col">
+    <div className="flex flex-col">
       <ChatComponent data={data as any} />
       <Form />
     </div>
