@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 export default function Form() {
   const [msg, setMsg] = useState("");
   const { data } = useSession();
-  const userEmail = data?.user.email;
+  const userEmail = data?.user!.email;
 
   return (
     <form

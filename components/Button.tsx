@@ -2,7 +2,7 @@
 
 import { signIn, signOut } from "next-auth/react";
 import { useState } from "react";
-import { SigninCredentials } from "../auth/signin/page";
+// import { SigninCredentials } from "../auth/signin/page";
 
 export function Logout() {
   return (
@@ -39,7 +39,7 @@ export function MainLogin() {
       >
         Login with Google
       </button>
-      <SigninCredentials />
+      {/* <SigninCredentials /> */}
     </>
   );
 }
