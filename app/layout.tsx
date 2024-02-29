@@ -76,18 +76,10 @@ export default async function RootLayout({
       <body className={inter.className}>
         {/* <NextAuthProvider> */}
         {/* Add Google Analytics script */}
-        <Script
+        {/* <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=G-W67JJJTSNL`}
-        />
-        <Script id="gtm-script" strategy="afterInteractive">
-          {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-W67JJJTSNL');
-            `}
-        </Script>
+        /> */}
         {/* Navbar */}
         <nav className="flex px-10 py-5 justify-between fixed top-0 left-0 w-full bg-white">
           <Link href="/">
@@ -95,6 +87,7 @@ export default async function RootLayout({
               CL<span className="text-blue-500">Chat</span>
             </h1>
           </Link>
+          <pre>SESSION: {JSON.stringify(session)}</pre>
 
           {session ? (
             <div className="flex items-center">
